@@ -1,0 +1,9 @@
+form {
+    max-width: 300px;
+}
+.form-field {
+    margin-top: 10px;
+}
+.form-field input, .form-field select{
+    float: right;
+}
