@@ -1,0 +1,18 @@
+{
+    "name": "andrey/form-evolution",
+    "authors": [
+        {
+            "name": "Andrey B",
+            "email": "abaranchik178@gmail.com"
+        }
+    ],
+    "require": {
+        "codeception/codeception" : "*",
+        "vlucas/phpdotenv": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "classes\\": "classes\\"
+        }
+    }
+}
