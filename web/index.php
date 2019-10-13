@@ -1,24 +1,23 @@
 <?php
-    require_once 'vendor/autoload.php';
+    require_once 'init.php';
+    use \classes\User;
     session_start();
-    $user = new \classes\User($_SESSION['userId']);
+    if ( isset($_SESSION['userId']) ) {
+        $user = new User($_SESSION['userId']);
+    }
+
 ?>
 <!DOCTYPE html>
 <head>
-    <title>Login</title>
+    <title>Home</title>
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
-    <div class="nav">
-        <?php
-            if ($user) {
-                echo 'Hi ' . $user->getFirstName();
-            }
-        ?>
-    </div>
+    <?php include 'nav.php';?>
     <div>
         <a href="registration.php">Registration</a>
         <a href="login.php">Login</a>
         <a href="user-profile.php">Profile</a>
     </div>
+    <span class="test-content">Home page</span>
 </body>

@@ -7,6 +7,7 @@
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
+<?php include 'nav.php';?>
     <h3>Login</h3>
     <form>
         <div class="form-field">
@@ -18,4 +19,5 @@
             <input name="password" type="password" id="password" placeholder="Enter password">
         </div>
     </form>
+    <span class="test-content">login page</span>
 </body>

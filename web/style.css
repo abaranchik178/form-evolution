@@ -10,3 +10,12 @@ form {
 .errors-block{
     color: red;
 }
+.user-state{
+    float: right;
+}
+.nav{
+    margin-bottom: 15px;
+}
+.test-content{
+    display: none;
+}

@@ -1,5 +1,7 @@
 
 <?php
+require_once 'init.php';
+
 use \classes\{
     DB,
     User
@@ -17,8 +19,10 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
         $registrationErrors[] = 'This email address is already use: "' . $user->getEmail() . '"';
     } else {
         $userId = $db->addUser($user);
-        $_SESSION['userId'] = $userId;
-        header('Location: /');
+        if ($userId) {
+            $_SESSION['userId'] = $userId;
+            header('Location: /');
+        }
     }
 }
 ?>
@@ -29,6 +33,7 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
+<?php include 'nav.php';?>
 <h3>Registration</h3>
 <div class="errors-block">
     <?php
@@ -39,7 +44,7 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
         }
     ?>
 </div>
-<form>
+<form method="post">
     <div class="form-field">
         <label for="email">Email Address</label>
         <input name="email" type="email" id="email" placeholder="Enter email">
@@ -76,7 +81,8 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
         <input type="file" id="avatar" name="avatar">
     </div>
     <div class="form-field">
-        <input type="submit">
+        <input name="submit" type="submit">
     </div>
 </form>
+<span class="test-content">Registration page</span>
 </body>
