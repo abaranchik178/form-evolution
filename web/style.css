@@ -7,3 +7,6 @@ form {
 .form-field input, .form-field select{
     float: right;
 }
+.errors-block{
+    color: red;
+}
