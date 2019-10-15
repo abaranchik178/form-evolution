@@ -16,5 +16,5 @@ modules:
                 password: 'sdf'
                 dump: 'tests/_data/summer-test.sql'
                 populate: true # run populator before all tests
-                cleanup: true # run populator before each test
+                cleanup: false # run populator before each test
                 populator: 'mysql -u $user -p$password $dbname < $dump'
