@@ -1,3 +1,15 @@
+<?php
+require_once 'init.php';
+use \classes\{
+    User,
+    UserMapper
+};
+session_start();
+if ( isset($_SESSION['userId']) ) {
+    $db = new UserMapper();
+    $user = $db->findUserById($_SESSION['userId']);
+}
+?>
 <!DOCTYPE html>
 <head>
     <title>User</title>
@@ -5,11 +17,12 @@
 </head>
 <body>
 <?php include 'nav.php';?>
+<?php if ( isset($user) ) { ?>
     <img src="">
-    email:
-    name:
-    gender:
-    birth date:
+    email: <?= $user->getEmail() ?>
+    name: <?= $user->getFirstName() ?>
+    gender: <?= $user->getGender() ?>
+<?php } ?>
 <span class="test-content">User profile page</span>
 </body>
 

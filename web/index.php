@@ -1,11 +1,14 @@
 <?php
     require_once 'init.php';
-    use \classes\User;
+    use \classes\{
+        User,
+        UserMapper
+    };
     session_start();
     if ( isset($_SESSION['userId']) ) {
-        $user = new User($_SESSION['userId']);
+        $db = new UserMapper();
+        $user = $db->findUserById($_SESSION['userId']);
     }
-
 ?>
 <!DOCTYPE html>
 <head>

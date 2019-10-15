@@ -3,28 +3,27 @@
 
 namespace classes;
 
-use \PDO;
-
-class DB
+class UserMapper
 {
-    private $options = [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES   => false,
-    ];
     private $pdo;
+    private $ormFields = [
+        'first_name' => 'firstName',
+        'last_name' => 'lastName',
+        'password_hash' => 'passwordHash',
+    ];
+
     public function __construct()
     {
-        $this->pdo = new PDO($_ENV['MYSQL_DSN'], $_ENV['MYSQL_USER'], $_ENV['MYSQL_PASSWORD'], $this->options);
+        $this->pdo = PDOConnection::getPDO();
     }
 
     public function addUser(User $user)
     {
         $query = <<<SQL
             INSERT INTO users
-                (email, first_name, last_name, gender, birth_date, password_hash, secret_string)
+                (email, first_name, last_name, gender, password_hash)
             VALUES
-                (:email, :firstName, :lastName, :gender, :birthDate, :passwordHash, :secretString)
+                (:email, :firstName, :lastName, :gender, :passwordHash)
 SQL;
         $sth = $this->pdo->prepare($query);
         $result = $sth->execute([
@@ -32,9 +31,7 @@ SQL;
             ':firstName' => $user->getFirstName(),
             ':lastName' => $user->getLastName(),
             ':gender' => $user->getGender(),
-            ':birthDate' => $user->getBirthDate(),
             ':passwordHash' => $user->getPasswordHash(),
-            ':secretString' => $user->getSecretString(),
         ]);
         if ($result) {
             return $this->pdo->lastInsertId();
@@ -54,7 +51,11 @@ SQL;
         if (!$result) {
             return null;
         }
-        return $sth->fetch();
+        $fetchResult = $sth->fetch();
+        if ( false === $fetchResult || null === $fetchResult) {
+            return null;
+        }
+        return $this->getUserFromState( $fetchResult );
     }
 
     public function findUserByEmail(string $email)
@@ -66,9 +67,24 @@ SQL;
         $result = $sth->execute([
             ':email' => $email,
         ]);
-        if (!$result) {
+        if ( !$result ) {
             return null;
         }
-        return $sth->fetch();
+        $fetchResult = $sth->fetch();
+        if ( false === $fetchResult || null === $fetchResult) {
+            return null;
+        }
+        return $this->getUserFromState( $fetchResult );
+    }
+
+    public function getUserFromState($state)
+    {
+        foreach ($this->ormFields as $dbFieldName => $objectFieldName) {
+            if ( isset($state[$dbFieldName]) ) {
+                $state[$objectFieldName] = $state[$dbFieldName];
+                unset( $state[$dbFieldName] );
+            }
+        }
+        return new User($state);
     }
 }

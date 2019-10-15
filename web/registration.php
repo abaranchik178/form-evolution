@@ -3,8 +3,9 @@
 require_once 'init.php';
 
 use \classes\{
-    DB,
-    User
+    UserMapper,
+    User,
+    RegistrationForm
 };
 
 session_start();
@@ -12,16 +13,38 @@ session_start();
 $registrationErrors = [];
 
 if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
-    $user = new User($_POST);
-    $db = new DB();
-
-    if ( $db->findUserByEmail( $user->getEmail() ) ) {
-        $registrationErrors[] = 'This email address is already use: "' . $user->getEmail() . '"';
+    //validate
+    if ( !empty($_POST['password1']) && !empty ($_POST['password2']) ) {
+        if ($_POST['password1'] !== $_POST['password2']) {
+            $registrationErrors[] = 'Password and password confirm is not equal';
+        }
     } else {
-        $userId = $db->addUser($user);
-        if ($userId) {
-            $_SESSION['userId'] = $userId;
+        $registrationErrors[] = 'Please enter password and password confirm';
+    }
+
+    //filter
+
+    //
+
+    $registrationForm = new RegistrationForm();
+    $registrationForm->loadData($_POST);
+    $userState = $registrationForm->getUserState();
+
+    $newUser = new User( $userState );
+
+    $userMapper = new UserMapper();
+
+    if ( $userMapper->findUserByEmail( $newUser->getEmail() ) ) {
+        $registrationErrors[] = 'This email address is already use: "' . $newUser->getEmail() . '"';
+    }
+
+    if ( empty($registrationErrors) ) {
+        $newUserId = $userMapper->addUser($newUser);
+        if ($newUserId) {
+            $_SESSION['userId'] = $newUserId;
             header('Location: /');
+        } else {
+            $registrationErrors[] = 'Add user error'; //fixme
         }
     }
 }

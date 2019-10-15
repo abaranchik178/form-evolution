@@ -12,43 +12,55 @@ class User
     private $lastName;
     private $birthDate;
     private $gender;
+    private $password;
     private $passwordHash;
     private $secretString;
     private $settings;
 
-    public function __construct($props)
+    public function __construct($state)
     {
-        if ( isset($props['id']) ) {
-            $this->setId($props['id']);
+        if ( isset($state['id']) ) {
+            $this->setId($state['id']);
         }
-        if ( isset($props['firstName']) ) {
-            $this->setFirstName($props['firstName']);
+        if ( isset($state['firstName']) ) {
+            $this->setFirstName($state['firstName']);
         }
-        if ( isset($props['lastName']) ) {
-            $this->setLastName($props['lastName']);
+        if ( isset($state['lastName']) ) {
+            $this->setLastName($state['lastName']);
         }
-        if ( isset($props['email']) ) {
-            $this->setEmail($props['email']);
+        if ( isset($state['email']) ) {
+            $this->setEmail($state['email']);
         }
-        if ( isset($props['birthDate']) ) {
-            $this->setBirthDate($props['birthDate']);
+        if ( isset($state['birthDate']) ) {
+            $this->setBirthDate($state['birthDate']);
         }
-        if ( isset($props['gender']) ) {
-            $this->setGender($props['gender']);
-        }
-        if ( isset($props['password1']) ) {
-            $this->setPasswordHash($props['password1']);
-        }
-        if ( isset($props['settings']) ) {
-            $this->setSettings($props['settings']);
+        if ( isset($state['gender']) ) {
+            $this->setGender($state['gender']);
         }
 
-        $this->setSecretString();
+        if ( isset($state['settings']) ) {
+            $this->setSettings($state['settings']);
+        }
+
+        if ( isset($state['passwordHash']) ) {
+            $this->setPasswordHash($state['passwordHash']);
+        } elseif (isset($state['password'])) {
+            $this->setPassword($state['password']);
+        } else {
+            throw new \Exception('User state required password or password hash');
+        }
+
+        if ( isset($state['secretString']) ) {
+            $this->setSecretString($state['secretString']);
+        }
     }
 
     public function verifyPassword(string $password)
     {
-
+        if ( !isset($this->passwordHash) ) {
+            throw new \Exception('User not have a password hash. User id: ' . $this->id);
+        }
+        return \password_verify($password, $this->passwordHash);
     }
     /**
      * @return mixed
@@ -119,7 +131,7 @@ class User
      */
     public function setId(int $id)
     {
-        $this->id = (int)$id;
+        $this->id = $id;
     }
 
     /**
@@ -127,7 +139,7 @@ class User
      */
     public function setEmail(string $email)
     {
-        $this->email = $this->sanitizeText($email);
+        $this->email = $email;
     }
 
     /**
@@ -135,7 +147,7 @@ class User
      */
     public function setFirstName(string $firstName)
     {
-        $this->firstName = $this->sanitizeText($firstName);
+        $this->firstName = $firstName;
     }
 
     /**
@@ -143,7 +155,7 @@ class User
      */
     public function setLastName(string $lastName)
     {
-        $this->lastName = $this->sanitizeText($lastName);
+        $this->lastName = $lastName;
     }
 
     /**
@@ -151,7 +163,7 @@ class User
      */
     public function setBirthDate(string $birthDate)
     {
-        $this->birthDate = $this->sanitizeText($birthDate);
+        $this->birthDate = $birthDate;
     }
 
     /**
@@ -159,28 +171,34 @@ class User
      */
     public function setGender(string $gender)
     {
-        $this->gender = $this->sanitizeText($gender);
+        $this->gender = $gender;
     }
 
     /**
      * @param mixed $passwordHash
      */
-    public function setPasswordHash(string $password)
+    public function setPasswordHash(string $passwordHash)
     {
-        $this->passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $this->passwordHash = $passwordHash;
+    }
+
+    public function setPassword(string $password)
+    {
+        $this->password = $password;
+        $this->setPasswordHash( self::hashPassword($password) );
     }
 
     /**
      * @param mixed $secretString
      */
-    public function setSecretString()
+    public function setSecretString(string $secretString)
     {
-        $this->secretString = 'dfgdg';
+        $this->secretString = $secretString;
     }
 
 
-    private function sanitizeText(string $text)
+    public static function hashPassword($password)
     {
-        return htmlspecialchars( trim($text) );
+        return password_hash($password, PASSWORD_DEFAULT);
     }
 }
