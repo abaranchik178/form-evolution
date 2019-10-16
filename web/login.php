@@ -26,7 +26,8 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
-<?php include 'nav.php';?>
+<div class="main-container">
+    <?php include 'nav.php';?>
     <h3>Login</h3>
         <?php
             if ( isset($err) ) {
@@ -46,5 +47,6 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
             <input  type="submit" value="Login">
         </div>
     </form>
-    <span class="test-content">login page</span>
+</div>>
+<span class="test-content">login page</span>
 </body>

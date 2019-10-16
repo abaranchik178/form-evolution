@@ -15,13 +15,15 @@ if ( isset($_SESSION['userId']) ) {
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
-<?php include 'nav.php';?>
-<?php if ( isset($user) ) { ?>
-    <img src="">
-    email: <?= $user->getEmail() ?>
-    name: <?= $user->getFirstName() ?>
-    gender: <?= $user->getGender() ?>
-<?php } ?>
+<div class="main-container">
+    <?php include 'nav.php';?>
+    <?php if ( isset($user) ) { ?>
+        <img src="">
+        email: <?= $user->getEmail() ?>
+        name: <?= $user->getFirstName() ?>
+        gender: <?= $user->getGender() ?>
+    <?php } ?>
+</div>
 <span class="test-content">User profile page</span>
 </body>
 

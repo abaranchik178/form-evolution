@@ -19,3 +19,6 @@ form {
 .test-content{
     display: none;
 }
+.main-container{
+    margin: 0px 20%;
+}
