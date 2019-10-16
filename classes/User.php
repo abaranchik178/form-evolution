@@ -55,6 +55,20 @@ class User
         }
     }
 
+    public static function hashPassword($password)
+    {
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        if (false === $passwordHash) {
+            throw new \LogicException('Can not create password hash');
+        }
+        return $passwordHash;
+    }
+
+    /**
+     * @param string $password
+     * @return bool
+     * @throws \Exception\
+     */
     public function verifyPassword(string $password)
     {
         if ( !isset($this->passwordHash) ) {
@@ -194,11 +208,5 @@ class User
     public function setSecretString(string $secretString)
     {
         $this->secretString = $secretString;
-    }
-
-
-    public static function hashPassword($password)
-    {
-        return password_hash($password, PASSWORD_DEFAULT);
     }
 }

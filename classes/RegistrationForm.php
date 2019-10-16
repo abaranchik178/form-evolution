@@ -6,6 +6,8 @@ namespace classes;
 
 class RegistrationForm
 {
+    use ExternalDataSource;
+
     private $email;
     private $firstName;
     private $lastName;
@@ -13,19 +15,17 @@ class RegistrationForm
     private $password1;
     private $password2;
 
-    const FIELDS = [
-        'firstName' => ['sanitizeText'],
-        'lastName' => ['sanitizeText'],
-        'email' => ['sanitizeText'],
-        'birthDate' => ['sanitizeText'],
-        'password1' => [],
-        'password2' => [],
-        'gender' => ['sanitizeText'],
-    ];
-
-    public function __construct()
+    public function getFields(): array
     {
-
+        return [
+            'firstName' => ['sanitizeText'],
+            'lastName' => ['sanitizeText'],
+            'email' => ['sanitizeText'],
+            'birthDate' => ['sanitizeText'],
+            'password1' => [],
+            'password2' => [],
+            'gender' => ['sanitizeText'],
+        ];
     }
 
     public function loadData(array $data)
@@ -51,30 +51,5 @@ class RegistrationForm
             'gender' => $this->gender,
             'password' => $this->password1,
         ];
-    }
-
-    public function sanitizeData(array $data): array
-    {
-        $sanitizedData = [];
-        foreach ($data as $fieldName => $fieldValue) {
-            if ( ! isset(self::FIELDS[$fieldName]) ) {
-                error_log("Remove not allowed field: $fieldName");
-                continue;
-            }
-            $sanitizedValue = $fieldValue;
-            foreach (self::FIELDS[$fieldName] as $sanitizeMethodName) {
-                if ( !method_exists($this, $sanitizeMethodName)) {
-                    throw new \Exception("Unknown method $sanitizeMethodName");
-                }
-                $sanitizedValue = $this->{$sanitizeMethodName}($sanitizedValue);
-            }
-            $sanitizedData[$fieldName] = $sanitizedValue;
-        }
-        return $sanitizedData;
-    }
-
-    private function sanitizeText(string $text)
-    {
-        return htmlspecialchars( trim($text) );
     }
 }

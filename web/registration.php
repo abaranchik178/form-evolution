@@ -5,10 +5,9 @@ require_once 'init.php';
 use \classes\{
     UserMapper,
     User,
-    RegistrationForm
+    RegistrationForm,
+    UserIdentity
 };
-
-session_start();
 
 $registrationErrors = [];
 
@@ -41,7 +40,8 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
     if ( empty($registrationErrors) ) {
         $newUserId = $userMapper->addUser($newUser);
         if ($newUserId) {
-            $_SESSION['userId'] = $newUserId;
+            $newUser->setId($newUserId);
+            UserIdentity::saveAuthSuccess($newUser);
             header('Location: /');
         } else {
             $registrationErrors[] = 'Add user error'; //fixme

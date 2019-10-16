@@ -3,15 +3,16 @@
 require_once 'init.php';
 
 use \classes\{
-    UserMapper,
-    User,
-    AuthHelper
+    UserIdentity,
+    LoginForm
 };
 
-session_start();
-
 if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
-    $result = AuthHelper::login();
+    $registrationForm = new LoginForm();
+    $registrationForm->loadData($_POST);
+    $userState = $registrationForm->getUserState();
+
+    $result = UserIdentity::authByEmail($userState['email'], $userState['password']);
     if (true === $result) {
         header('Location: /');
     } else {
