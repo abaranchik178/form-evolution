@@ -76,7 +76,6 @@ class User
         }
         return \password_verify($password, $this->passwordHash);
     }
-
     /**
      * @return mixed
      */

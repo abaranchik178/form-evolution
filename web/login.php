@@ -4,8 +4,7 @@ require_once 'init.php';
 
 use \classes\{
     UserIdentity,
-    LoginForm,
-    Helper
+    LoginForm
 };
 
 if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
@@ -47,7 +46,6 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
         <div class="form-field">
             <input  type="submit" value="Login">
         </div>
-        <?php echo Helper::getCsrfSecretFormInput();?>
     </form>
 </div>>
 <span class="test-content">login page</span>

@@ -10,7 +10,6 @@ class UserMapper
         'first_name' => 'firstName',
         'last_name' => 'lastName',
         'password_hash' => 'passwordHash',
-        'secret_string' => 'secretString',
     ];
 
     public function __construct()
@@ -22,9 +21,9 @@ class UserMapper
     {
         $query = <<<SQL
             INSERT INTO users
-                (email, first_name, last_name, gender, password_hash, secret_string)
+                (email, first_name, last_name, gender, password_hash)
             VALUES
-                (:email, :firstName, :lastName, :gender, :passwordHash, :secretString)
+                (:email, :firstName, :lastName, :gender, :passwordHash)
 SQL;
         $sth = $this->pdo->prepare($query);
         $result = $sth->execute([
@@ -33,7 +32,6 @@ SQL;
             ':lastName' => $user->getLastName(),
             ':gender' => $user->getGender(),
             ':passwordHash' => $user->getPasswordHash(),
-            ':secretString' => $user->getSecretString(),
         ]);
         if ($result) {
             return $this->pdo->lastInsertId();
@@ -48,26 +46,6 @@ SQL;
         $sth = $this->pdo->prepare($query);
         $result = $sth->execute([
             ':id' => $id,
-        ]);
-
-        if (!$result) {
-            return null;
-        }
-        $fetchResult = $sth->fetch();
-        if ( false === $fetchResult || null === $fetchResult) {
-            return null;
-        }
-        return $this->getUserFromState( $fetchResult );
-    }
-
-    public function findUserBySecretString(string $secretString)
-    {
-        $query = <<<SQL
-            SELECT * FROM users WHERE secret_string=:secretString
-SQL;
-        $sth = $this->pdo->prepare($query);
-        $result = $sth->execute([
-            ':secret_string' => $secretString,
         ]);
 
         if (!$result) {

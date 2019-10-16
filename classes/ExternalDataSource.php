@@ -6,13 +6,6 @@ namespace classes;
 
 trait ExternalDataSource
 {
-    public function isValidCsrfSecret($inputCsrfSecret): bool
-    {
-        if ($_SESSION['csrfSecret'] = $inputCsrfSecret) {
-            return true;
-        }
-        return false;
-    }
     public function getFields(): array
     {
         return [];

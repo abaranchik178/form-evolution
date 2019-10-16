@@ -21,11 +21,6 @@ class LoginForm
 
     public function loadData(array $data)
     {
-        if ( ! isset($data['csrfSecret']) || ! $this->isValidCsrfSecret($data['csrfSecret']) ) {
-            throw new \Exception('Invalid CSRF secret');
-        }
-        unset($data['csrfSecret']);
-
         $sanitizedData = $this->sanitizeData($data);
 
         $this->email = $sanitizedData['email'];

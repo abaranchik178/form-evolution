@@ -5,6 +5,8 @@ CREATE TABLE users(
     first_name VARCHAR(70),
     last_name VARCHAR(70),
     gender enum('male', 'female') DEFAULT NULL,
-    password_hash TINYTEXT NOT NULL,
-    secret_string TINYTEXT NOT NULL
+#     birth_date DATE,
+    password_hash TINYTEXT NOT NULL
+#     secret_string TINYTEXT NOT NULL,
+#     settings JSON DEFAULT NULL
 );

@@ -12,6 +12,9 @@
         $user = UserIdentity::getUser();
         if ( $user instanceof User) {
             echo 'Hi ' . $user->getFirstName();
+        } else {
+            error_log(print_r('-----------------------------------',1));
+            error_log(print_r($user,1));
         }
         ?>
     </div>

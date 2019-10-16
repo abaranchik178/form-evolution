@@ -6,8 +6,7 @@ use \classes\{
     UserMapper,
     User,
     RegistrationForm,
-    UserIdentity,
-    Helper
+    UserIdentity
 };
 
 $registrationErrors = [];
@@ -39,7 +38,6 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
     }
 
     if ( empty($registrationErrors) ) {
-        $newUser->setSecretString( Helper::generateRandomString() );
         $newUserId = $userMapper->addUser($newUser);
         if ($newUserId) {
             $newUser->setId($newUserId);
@@ -101,7 +99,6 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
         <div class="form-field">
             <input name="submit" type="submit">
         </div>
-        <?php echo Helper::getCsrfSecretFormInput(); ?>
     </form>
 </div>
 <span class="test-content">Registration page</span>
