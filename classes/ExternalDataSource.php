@@ -13,6 +13,7 @@ trait ExternalDataSource
         }
         return false;
     }
+
     public function getFields(): array
     {
         return [];

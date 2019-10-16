@@ -32,6 +32,22 @@ class LoginForm
         $this->password = $sanitizedData['password'];
     }
 
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
 
 
     public function getUserState()

@@ -8,11 +8,23 @@
     ],
     "require": {
         "codeception/codeception" : "*",
-        "vlucas/phpdotenv": "*"
+        "vlucas/phpdotenv": "*",
+        "abaranchik178/validation": "dev-master",
+        "abaranchik178/i18n": "dev-master"
     },
     "autoload": {
         "psr-4": {
             "classes\\": "classes\\"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/abaranchik178/validation"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/abaranchik178/i18n"
+        }
+    ]
 }

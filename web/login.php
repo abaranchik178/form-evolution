@@ -5,19 +5,24 @@ require_once 'init.php';
 use \classes\{
     UserIdentity,
     LoginForm,
-    Helper
+    Helper,
+    LoginFormValidator
 };
 
-if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
-    $registrationForm = new LoginForm();
-    $registrationForm->loadData($_POST);
-    $userState = $registrationForm->getUserState();
+$loginFormValidator = new LoginFormValidator();
+$loginForm = new LoginForm();
 
-    $result = UserIdentity::authByEmail($userState['email'], $userState['password']);
-    if (true === $result) {
-        header('Location: /');
-    } else {
-        $err = $result;
+if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
+    $loginForm->loadData($_POST);
+
+    if ( $loginFormValidator->validate($_POST) ) {
+        $userState = $loginForm->getUserState();
+        $result = UserIdentity::authByEmail($userState['email'], $userState['password']);
+        if (true === $result) {
+            header('Location: /');
+        } else {
+            $err = $result;
+        }
     }
 }
 ?>
@@ -38,11 +43,19 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
     <form method="post">
         <div class="form-field">
             <label for="email">Email Address</label>
-            <input name="email" type="email" id="email" placeholder="Enter email">
+            <input name="email" type="email" id="email" placeholder="Enter email" value="<?php
+                echo $loginForm->getEmail();
+            ?>">
+            <div class="errors-block">
+                <?php echo $loginFormValidator->getErrorsMessagesAsString('email'); ?>
+            </div>
         </div>
         <div class="form-field">
             <label for="password">Password</label>
             <input name="password" type="password" id="password" placeholder="Enter password">
+            <div class="errors-block">
+                <?php echo $loginFormValidator->getErrorsMessagesAsString('password'); ?>
+            </div>
         </div>
         <div class="form-field">
             <input  type="submit" value="Login">
