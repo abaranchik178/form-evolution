@@ -6,7 +6,7 @@ namespace classes;
 class UserMapper
 {
     private $pdo;
-    private $ormFields = [
+    private $ormDifferentFields = [
         'first_name' => 'firstName',
         'last_name' => 'lastName',
         'password_hash' => 'passwordHash',
@@ -79,7 +79,7 @@ SQL;
 
     public function getUserFromState($state)
     {
-        foreach ($this->ormFields as $dbFieldName => $objectFieldName) {
+        foreach ($this->ormDifferentFields as $dbFieldName => $objectFieldName) {
             if ( isset($state[$dbFieldName]) ) {
                 $state[$objectFieldName] = $state[$dbFieldName];
                 unset( $state[$dbFieldName] );
