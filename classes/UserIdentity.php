@@ -7,12 +7,14 @@ namespace classes;
 class UserIdentity
 {
     private static $user;
-    private static $cookieAutologin = false;
+    private static $cookieAutologin = true;//fixme this dont work
     private static $sessionAutologin = true;
     private static $authError;
 
     const ERROR_INVALID_EMAIL = 'Email not found';
     const ERROR_INVALID_PASSWORD = 'Invalid password';
+    const ERROR_INVALID_SESSION = 'Invalid session data';
+    const ERROR_INVALID_SECRET = 'Invalid secret string';
 
 
 
@@ -38,7 +40,18 @@ class UserIdentity
 
     public static function authByCookieUserSecret()
     {
+        if ( isset($_COOKIE['userSecret']) && !empty($_COOKIE['userSecret']) ) {
+            $userMapper = new UserMapper();
+            $user = $userMapper->findUserBySecretString($_COOKIE['userSecret']);
 
+            if ( $user &&  $user instanceof User) {
+                self::saveAuthSuccess($user);
+                return true;
+            } else {
+                self::$authError = self::ERROR_INVALID_SECRET;
+                return false;
+            }
+        }
     }
     public static function authBySessionUserId()
     {
